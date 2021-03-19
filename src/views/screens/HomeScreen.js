@@ -1,9 +1,21 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native'
+import { 
+  ImageBackground, 
+  FlatList, 
+  SafeAreaView, 
+  ScrollView, 
+  StatusBar, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  View, 
+  Dimensions} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import COLORS from '../../consts/colors'
+import places from '../../consts/places'
+const { width } = Dimensions.get('screen')
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const categoryIcons = [
     <Icon name='flight' size={25} color={COLORS.primary} />,
     <Icon name='beach-access' size={25} color={COLORS.primary} />,
@@ -17,6 +29,51 @@ const HomeScreen = () => {
       ))}
     </View>
   }
+
+  
+  const ListCards = () => {
+    return (
+      places.map((place) => (
+        <ImageBackground style={styles.cardImage} source={place.image} key={place.id}>
+          <Text
+            style={{
+              color: COLORS.white,
+              fontSize: 20,
+              fontWeight: 'bold',
+              marginTop: 10,
+            }}
+          >
+            {place.name}
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'flex-end'
+            }}
+          >
+            <View style={{flexDirection: 'row'}}>
+              <Icon name='place' size={20} color={COLORS.white} />
+              <Text style={{marginLeft: 5, color: COLORS.white}}>
+                {place.location}
+              </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Icon name='star' size={20} color={COLORS.white} />
+              <Text style={{marginLeft: 5, color: COLORS.white}}>5.0</Text>
+            </View>
+          </View>
+
+        </ImageBackground>
+      ))
+    )
+  }
+
+  const RecommendedCard = ({place}) => {
+    return <ImageBackground style={styles.rmCardImage}></ImageBackground>
+  }
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <StatusBar translucent={false} backgroundColor={COLORS.primary} />
@@ -38,12 +95,32 @@ const HomeScreen = () => {
               <Icon name='search' size={28} />
               <TextInput 
                 placeholder='Search place'
-                style={{color: COLORS.grey, borderBottomColor: 'white'}}
+                style={{color: COLORS.grey, borderBottomColor: 'white', }}
               />
             </View>
           </View>
         </View>
+        
         <ListCategories />
+
+        <Text style={styles.sectionTitle}>Places</Text>
+
+        <View>
+          <FlatList 
+            contentContainerStyle={{paddingLeft: 20}}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={places}
+            renderItem={ListCards}
+          />
+        </View>
+
+        {/* <Text>Recommended</Text>
+        <FlatList
+          horizontal
+          data={places}
+          renderItem={({item}) => <RecommendedCard place={item} />}
+        /> */}
       </ScrollView>
     </SafeAreaView>
   )
@@ -71,7 +148,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 20,
     alignItems: 'center',
-    elevation: 12
+    elevation: 12,
+    borderRadius: 8
   },
   categoryContainer: {
     marginTop: 60,
@@ -87,6 +165,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10
   },
+  sectionTitle: {
+    marginHorizontal: 20,
+    marginVertical: 20,
+    fontWeight: 'bold',
+    fontSize: 20
+  },
+  cardImage: {
+    height: 220, 
+    width: width / 2,
+    marginRight: 20,
+    padding: 10,
+    overflow: 'hidden',
+    borderRadius: 8
+  },
+  rmCardImage: {
+    width: width - 40,
+    height: 200,
+    marginRight:  20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    padding: 10
+  }
 })
 
 export default HomeScreen
