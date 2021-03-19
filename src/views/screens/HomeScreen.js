@@ -70,8 +70,40 @@ const HomeScreen = ({navigation}) => {
     )
   }
 
-  const RecommendedCard = ({place}) => {
-    return <ImageBackground style={styles.rmCardImage}></ImageBackground>
+  const RecommendedCard = () => {
+    return (places.map( place => (
+      <ImageBackground style={styles.rmCardImage} source={place.image} key={place.id}>
+        <Text 
+          style={{
+            color: COLORS.white,
+            fontSize: 22,
+            fontWeight: 'bold',
+            marginTop: 10
+          }}
+        >{place.name}</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'flex-end'
+          }}>
+          <View style={{width: '100%', flexDirection: 'row', marginTop: 10}}>
+            {/* location */}
+            <View style={{flexDirection: 'row'}}>
+              <Icon name='place' size={22} color={COLORS.white} />
+              <Text style={{color: COLORS.white, marginLeft: 5}}>{place.location}</Text>
+            </View>
+            {/* start */}
+            <View style={{flexDirection: 'row'}}>
+              <Icon name='star' size={22} color={COLORS.white} />
+              <Text style={{color: COLORS.white, marginLeft: 5}}>5.0</Text>
+            </View>
+          </View>
+          <Text style={{color: COLORS.white, fontSize: 13}}>{place.details}</Text>
+        </View>
+      </ImageBackground>
+      ))
+    )
   }
 
   return (
@@ -113,14 +145,16 @@ const HomeScreen = ({navigation}) => {
             data={places}
             renderItem={ListCards}
           />
+          <Text style={styles.sectionTitle}>Recommended</Text>
+          <FlatList
+            snapToInterval={width - 20}
+            contentContainerStyle={{paddingLeft: 20, paddingBottom: 20}}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={places}
+            renderItem={RecommendedCard}
+          />
         </View>
-
-        {/* <Text>Recommended</Text>
-        <FlatList
-          horizontal
-          data={places}
-          renderItem={({item}) => <RecommendedCard place={item} />}
-        /> */}
       </ScrollView>
     </SafeAreaView>
   )
